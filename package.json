@@ -1,0 +1,38 @@
+{
+  "name": "markdown-blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dompurify": "^2.0.8",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "formidable": "^2.0.0-dev.20200131.2",
+    "jsdom": "^16.2.1",
+    "marked": "^0.8.0",
+    "method-override": "^3.0.0",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.25",
+    "slugify": "^1.4.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seyiodediran/hisl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seyiodediran/hisl/issues"
+  },
+  "homepage": "https://github.com/seyiodediran/hisl#readme",
+  "description": ""
+}

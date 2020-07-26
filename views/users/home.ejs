@@ -1,0 +1,242 @@
+<%- include ("header")%>
+
+<!-- ======= Blog Section ======= -->
+
+  <main id="main">
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Blog</h2>
+
+          <ol>
+            <li><a href="/index.html">Home</a></li>
+            <li>Blog</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Blog Section -->
+
+
+    
+
+    <!-- ======= Blog Section ======= -->
+    <section class="blog" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+      <div class="container">
+      
+        <div class="row">
+
+          <div id="posts">
+<% posts.forEach(function (post) {  %>
+
+           <div class="col-lg-8 entries"> 
+
+            <article class="entry" id="post-<%- post._id %>">
+
+              <div class="entry-img d-flex  justify-content-center align-items-center">
+                <img class = "img-fluid rounded" src="<%- post.image %>" alt="">
+              </div>
+
+              <h2 class="entry-title">
+                <a href="blog-single.html">  <%- post.title %></a>
+              </h2>
+
+              <!-- <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John
+                      Doe</a></li>
+                  <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
+                  <li class="d-flex align-items-center"><i class="icofont-comment"></i> <a href="blog-single.html">12
+                      Comments</a></li>
+                </ul>
+              </div> -->
+
+              <div class="entry-content">
+                <p>
+                 <%- post.description %>
+                </p>
+                <div class="read-more">
+                 <p> <a href="posts/<%- post._id %>" class="btn btn-primary p-3 px-xl-4 py-xl-3">Read More</a></p>
+                </div>
+              </div>
+
+            </article>
+
+              </div>
+     
+
+
+
+                 <% }) %>
+
+ 
+          </div>
+        </div><!-- End .row -->
+        
+
+      </div><!-- End .container -->
+
+    </section><!-- End Blog Section -->
+
+  </main><!-- End #main -->
+
+
+
+
+
+<script>
+  var socket = io();
+
+
+
+  socket.on("delete_post", function(replyId) {
+    document.getElementById("post-" + replyId).remove();
+  })
+  socket.on("new_post", function (formData) {
+    var html = "";
+
+         html += '<div class="col-lg-8 entries">';
+
+            html += ' <article class="entry">';
+
+               html += '<div class="entry-img">';
+               html += '  <img class = "img-fluid rounded" src="' + formData.image + '" alt="">';
+              html += '</div>';
+
+               html += '<h2 class="entry-title">';
+               html += '  <a href="blog-single.html">' + formData.title + '</a>';
+             html += '  </h2>';
+
+             html += '  <!-- <div class="entry-meta">';
+                html += ' <ul>';
+                  html += ' <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John';
+                    html += '   Doe</a></li>';
+                   html += '<li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>';
+                  html += ' <li class="d-flex align-items-center"><i class="icofont-comment"></i> <a href="blog-single.html">12';
+                 html += '      Comments</a></li>';
+               html += '  </ul>';
+             html += '  </div> -->';
+
+              html += ' <div class="entry-content">';
+               html += '  <p>';
+               html += formData.description ;
+              html += '   </p>';
+             html += '    <div class="read-more">';
+            html += '      <p> <a href="posts/' + formData._id + '" class="btn btn-primary p-3 px-xl-4 py-xl-3">Read More</a></p>';
+             html += '    </div>';
+             html += '  </div>';
+
+          html += '   </article>';
+
+           html += '    </div>';
+
+   //         html += '<section>'
+
+   //         html += '<div class="col-lg-4" style="position:absolute;top:40px; right:0">';
+   //         html += ' <div class="sidebar">';
+
+   //          html += '  <h3 class="sidebar-title">Search</h3>';
+   //           html += ' <div class="sidebar-item search-form">';
+   //            html += '  <form action="">';
+   //            html += '    <input type="text">';
+   //              html += '  <button type="submit"><i class="icofont-search"></i></button>';
+   //            html += '  </form>';
+   //          html += '  </div><!-- End sidebar search formn-->';
+
+   //            html += '<h3 class="sidebar-title">Categories</h3>';
+   //           html += ' <div class="sidebar-item categories">';
+   //            html += '  <ul>';
+   //              html += '  <li><a href="#">General <span>(25)</span></a></li>';
+   //            html += '    <li><a href="#">Lifestyle <span>(12)</span></a></li>';
+   //             html += '   <li><a href="#">Travel <span>(5)</span></a></li>';
+   //             html += '   <li><a href="#">Design <span>(22)</span></a></li>';
+   //            html += '    <li><a href="#">Creative <span>(8)</span></a></li>';
+   //             html += '   <li><a href="#">Educaion <span>(14)</span></a></li>';
+   //           html += '   </ul>';
+
+   //           html += ' </div><!-- End sidebar categories-->';
+
+   //          html += '  <h3 class="sidebar-title">Recent Posts</h3>';
+   //         html += '   <div class="sidebar-item recent-posts">';
+   //          html += '    <div class="post-item clearfix">';
+   //           html += '     <img src="assets/img/recent-posts-1.jpg" alt="">';
+   //          html += '      <h4><a href="blog-single.html">Nihil blanditiis at in nihil autem</a></h4>';
+   //          html += '      <time datetime="2020-01-01">Jan 1, 2020</time>';
+   //      html += '        </div>';
+
+   //           html += '   <div class="post-item clearfix">';
+   //            html += '    <img src="assets/img/recent-posts-2.jpg" alt="">';
+   //           html += '     <h4><a href="blog-single.html">Quidem autem et impedit</a></h4>';
+   //            html += '    <time datetime="2020-01-01">Jan 1, 2020</time>';
+   //            html += '  </div>';
+
+   //        html += '      <div class="post-item clearfix">';
+   //        html += '        <img src="assets/img/recent-posts-3.jpg" alt="">';
+   //        html += '        <h4><a href="blog-single.html">Id quia et et ut maxime similique occaecati ut</a></h4>';
+   //            html += '    <time datetime="2020-01-01">Jan 1, 2020</time>';
+   //          html += '    </div>';
+
+   //         html += '     <div class="post-item clearfix">';
+   //           html += '     <img src="assets/img/recent-posts-4.jpg" alt="">';
+   //          html += '      <h4><a href="blog-single.html">Laborum corporis quo dara net para</a></h4>';
+   //           html += '     <time datetime="2020-01-01">Jan 1, 2020</time>';
+   //            html += '  </div>';
+
+   //         html += '     <div class="post-item clearfix">';
+   //           html += '       <img src="assets/img/recent-posts-5.jpg" alt="">';
+   //           html += '       <h4><a href="blog-single.html">Et dolores corrupti quae illo quod dolor</a></h4>';
+   //           html += '       <time datetime="2020-01-01">Jan 1, 2020</time>';
+   //           html += '     </div>';
+   //            html += '  </div><!-- End sidebar recent posts-->';
+
+   //           html += '   <h3 class="sidebar-title">Tags</h3>';
+   //          html += '    <div class="sidebar-item tags">';
+   //            html += '    <ul>';
+   //             html += '     <li><a href="#">App</a></li>';
+   //              html += '    <li><a href="#">IT</a></li>';
+   //             html += '     <li><a href="#">Business</a></li>';
+   //              html += '    <li><a href="#">Business</a></li>';
+   //              html += '    <li><a href="#">Mac</a></li>';
+   //              html += '    <li><a href="#">Design</a></li>';
+   //            html += '      <li><a href="#">Office</a></li>';
+   //             html += '     <li><a href="#">Creative</a></li>';
+   //             html += '     <li><a href="#">Studio</a></li>';
+   //             html += '     <li><a href="#">Smart</a></li>';
+   //              html += '    <li><a href="#">Tips</a></li>';
+   //              html += '    <li><a href="#">Marketing</a></li>';
+   //            html += '    </ul>';
+
+   //           html += '   </div><!-- End sidebar tags-->';
+
+   //        html += '    </div><!-- End sidebar -->';
+
+   //        html += '  </div><!-- End blog sidebar -->';
+   //         html += '</div>';
+   //       html += '</div><!-- End .row -->';
+        
+
+   //    html += ' </div><!-- End .container -->';
+
+   //   html += '</section><!-- End Blog Section -->';
+
+   // html += '</main><!-- End #main -->';
+
+           $("#posts").prepend(html);
+
+  });
+</script>
+
+
+
+
+
+
+
+
+
+ <%- include ("footer")%>
+
+
+
+

@@ -1694,9 +1694,9 @@ section {
 }
 
 .blog .entry .entry-img {
-  max-height: 400px;
+  /*max-height: 400px;*/
   margin: -30px -30px 20px -30px;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 .blog .entry .entry-title {
@@ -1747,14 +1747,14 @@ section {
   line-height: 24px;
 }
 
-.blog .entry .entry-content .read-more {
+.blog .entry .entry-content .read-more, .blog .entry .entry-content .edit {
   -moz-text-align-last: right;
   text-align-last: right;
 }
 
 .blog .entry .entry-content .read-more a {
   display: inline-block;
-  background: #68A4C4;
+  background: #0d4f14;;
   color: #fff;
   padding: 6px 20px;
   transition: 0.3s;
@@ -1762,7 +1762,7 @@ section {
 }
 
 .blog .entry .entry-content .read-more a:hover {
-  background: #32627b;
+  background: #46b373;
 }
 
 .blog .entry .entry-content h3 {
@@ -2377,3 +2377,19 @@ section {
 #footer .credits a {
   color: #a2e3c0;
 }
+
+#layoutAuthentication {
+  display: flex;
+  flex-direction: column;
+  margin-top:100px;
+  min-height: 85vh;
+}
+#layoutAuthentication #layoutAuthentication_content {
+  min-width: 0;
+  flex-grow: 1;
+}
+#layoutAuthentication #layoutAuthentication_footer {
+  min-width: 0;
+}
+
+

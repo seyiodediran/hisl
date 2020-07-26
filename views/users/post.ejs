@@ -1,0 +1,242 @@
+
+<%- include ("header")%>
+
+
+<main id="main">
+
+    <!-- ======= Blog Section ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Blog</h2>
+
+          <ol>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/">Blog</a></li>
+            <li><%- post.title %></li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Blog Section -->
+
+  <section class="blog" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-8 entries">
+
+            <article class="entry entry-single">
+              <div class="entry-img d-flex  justify-content-center align-items-center">
+                 <% if (post.image) { %>
+            <img class = "img-fluid"  src="../../<%- post.image %>" alt="">
+
+              <% } else{ %>
+            <img class = "img-fluid"  src="<%- post.image %>" alt="">
+
+
+              <% } %>
+              </div>
+
+              <h2 class="entry-title">
+                <a href="blog-single.html">  <%- post.title %>  </a>
+              </h2>
+
+              <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
+                  <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
+                  <li class="d-flex align-items-center"><i class="icofont-comment"></i> <a href="blog-single.html">12 Comments</a></li>
+                </ul>
+              </div>
+
+              <div class="entry-content">
+                <p>
+
+                  <%- post.content %>   
+                </p>
+
+              </div>
+
+              <div class="entry-footer clearfix">
+                <div class="float-left">
+                  <i class="icofont-folder"></i>
+                  <ul class="cats">
+                    <li><a href="#">Business</a></li>
+                  </ul>
+
+                  <i class="icofont-tags"></i>
+                  <ul class="tags">
+                    <li><a href="#">Creative</a></li>
+                    <li><a href="#">Tips</a></li>
+                    <li><a href="#">Marketing</a></li>
+                  </ul>
+                </div>
+
+                <div class="float-right share">
+                  <a href="" title="Share on Twitter"><i class="icofont-twitter"></i></a>
+                  <a href="" title="Share on Facebook"><i class="icofont-facebook"></i></a>
+                  <a href="" title="Share on Instagram"><i class="icofont-instagram"></i></a>
+                </div>
+
+              </div>
+
+            </article><!-- End blog entry -->
+
+
+
+
+
+     <div class="blog-comments" id="comments">
+
+      
+               <% if(post.comments)  { %>
+    <% post.comments = post.comments.reverse(); %>
+    <% post.comments.forEach(function (comment) { %>
+
+              <div id="comment-1" class="comment clearfix">
+                <img src="assets/img/comments-1.jpg" class="comment-img  float-left" alt="">
+                <h5><a href=""><%- comment.username %></a> <a href="#" class="reply"><i class="icofont-reply"></i> Reply</a></h5>
+                <time datetime="2020-01-01">01 Jan, 2020</time>
+                <p>
+                  <%- comment.comment %>
+                 
+                </p>
+
+
+
+              </div><!-- End comment #1 -->
+        
+
+ <%  })  %>
+<% } %>
+             <!-- End comment #4 -->
+
+              <div class="reply-form">
+                <h4>Leave a Comment</h4>
+                <p>Your email address will not be published. Required fields are marked * </p>
+                <form method="POST" onsubmit = "return doComment(this);">
+                   <input type="hidden" id="post_id" name="post_id" value ="<%- post._id %>">
+         
+                  <div class="row">
+                    <div class="col-md-6 form-group">
+                      <input name="username" type="text" class="form-control" placeholder="Your Name*">
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <input name="email" type="text" class="form-control" placeholder="Your Email*">
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col form-group">
+                      <textarea name="comment" class="form-control" placeholder="Your Comment*"></textarea>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+              </div>
+
+            </div><!-- End blog comments -->
+</div>
+
+
+
+</div>
+</div>
+</section>
+</main>
+
+
+ <script>
+  var socket = io();
+  
+      function doComment(form) {
+
+        var formData ={username: form.username.value, comment: form.comment.value, post_id: form.post_id.value, email: form.email.value};
+        $.ajax({
+          url: "/do-comment",
+          method: "POST",
+          data: formData,
+
+
+          success: function (response) {
+            formData._id = response._id;
+
+
+            socket.emit("new_comment", formData);
+
+
+            alert (response.text);
+          }
+        })
+        return false;
+      }
+
+
+      socket.on("new_comment", function (comment){
+
+        if (comment.post_id != $("#post_id").val()) {
+          return
+        }
+        var html = "";
+
+html += ' <div id="comment-1" class="comment clearfix">';
+            html += '    <img src="assets/img/comments-1.jpg" class="comment-img  float-left" alt="">';
+         html += '       <h5><a href="">' + comment.username + '</a> <a href="#" class="reply"><i class="icofont-reply"></i> Reply</a></h5>';
+          html += '      <time datetime="2020-01-01">01 Jan, 2020</time>';
+           html += '     <p>';
+            html +=  comment.comment ;
+                 
+         html += '       </p>';
+
+          html += ' </div>';
+
+        $("#comments").prepend(html);
+
+
+      });
+
+
+// function doReply(form) {
+//         var formData = {
+//           post_id: form.post_id.value,
+//           comment_id: form.comment_id.value,
+//           name: form.name.value,
+//           reply: form.reply.value
+
+//         };
+
+//         $.ajax({
+
+//           url: "/do-reply",
+//           method: "POST",
+//           data: formData,
+//           success: function (response) {
+//           alert(response.text)
+//           }
+//         })
+
+//         return false;
+//       }
+
+
+      
+
+    </script>
+   
+
+ <%- include ("footer")%>
+
+
+
+
+  
+    
+  </body>
+</html>
+
+
+
+
