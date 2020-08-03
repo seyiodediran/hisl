@@ -1,9 +1,31 @@
+'use strict';
+
+const path = require('path');
+const serverless = require('serverless-http');
+
+
+
+const router = express.Router();
+router.get('/', (req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.write('<h1>Hello from Express.js!</h1>');
+  res.end();
+});
+router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+router.post('/', (req, res) => res.json({ postBody: req.body }));
+
+app.use(bodyParser.json());
+app.use('/.netlify/functions/server', router);  // path must route to lambda
+app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+
+
+
 const express = require('express')
 const mongoose = require('mongoose')
 // const Article = require('./models/article')
 // const articleRouter = require('./routes/articles')
 // const methodOverride = require('method-override')
-const app = express()
+
 var bodyParser = require ("body-parser");
 var ObjectId = require('mongodb').ObjectId
 
@@ -48,7 +70,7 @@ app.use(express.urlencoded({ extended: false }))
 // })
 
 // app.use('/articles', articleRouter)
-app.post("/do-delete", function(req, res) {
+router.post("/do-delete", function(req, res) {
 	// if(req.session.admin) {
 		fs.unlink(req.body.image.replace("/", ""), function(error) {
 			blog.collection("posts").remove({
@@ -62,22 +84,22 @@ app.post("/do-delete", function(req, res) {
 	// }
 })
 
-app.get("/", function(req, res){
+router.get("/", function(req, res){
 	blog.collection("posts").find().sort({"_id": -1}).toArray(function (error, posts) {
 		res.render("users/home", {posts:posts})
 	})
 	
 })
-app.use('/assets', express.static('assets'));
+router.use('/assets', express.static('assets'));
 
-app.use(express.static(__dirname + "/"));
+router.use(express.static(__dirname + "/"));
 
-app.get("/do-logout", function (req,res) {
+router.get("/do-logout", function (req,res) {
 	req.session.destroy();
 	res.redirect("/admin")
 })
 
-app.get('/admin/dashboard', function(req, res){
+router.get('/admin/dashboard', function(req, res){
 	if (req.session.admin) {
 	res.render('admin/dashboard')
 	}else{
@@ -87,7 +109,7 @@ app.get('/admin/dashboard', function(req, res){
 
 
 
-app.get ( '/admin/posts', function(req, res){
+router.get ( '/admin/posts', function(req, res){
 	if (req.session.admin) {
 
 		blog.collection("posts").find().toArray(function (error, posts) {
@@ -100,7 +122,7 @@ app.get ( '/admin/posts', function(req, res){
 	
 })
 
-app.get("/posts/edit/:id", function(req, res) {
+router.get("/posts/edit/:id", function(req, res) {
 	if (req.session.admin) {
 			blog.collection("posts").findOne({
 				"_id": ObjectId(req.params.id)
@@ -113,7 +135,7 @@ app.get("/posts/edit/:id", function(req, res) {
 })
 
 
-app.post("/do-edit-post", function(req, res) {
+router.post("/do-edit-post", function(req, res) {
 	blog.collection("posts").updateOne({
 		"_id":ObjectId(req.body._id)
 	}, {
@@ -128,7 +150,7 @@ app.post("/do-edit-post", function(req, res) {
 	})
 })
 
-app.post("/do-admin-login", function (req, res) {
+router.post("/do-admin-login", function (req, res) {
 	blog.collection("admins").findOne({"email": req.body.email, "password": req.body.password}, function (error, admin) {
 		if(admin != "") {
 			req.session.admin = admin;
@@ -137,12 +159,12 @@ app.post("/do-admin-login", function (req, res) {
 	});
 })
 
-app.get("/admin", function (req, res) {
+router.get("/admin", function (req, res) {
 	res.render("admin/login")
 })
 
 
-app.post("/do-post", function (req,res){
+router.post("/do-post", function (req,res){
 	blog.collection("posts").insertOne(req.body, function (error, document){
 		res.send({
 			text: "posted successfully",
@@ -155,14 +177,14 @@ app.post("/do-post", function (req,res){
 // });
 
 
-app.get("/posts/:id", function (req, res) {
+router.get("/posts/:id", function (req, res) {
 	blog.collection("posts").findOne({"_id":ObjectId(req.params.id)}, function(error, post){
 		res.render("users/post", {post:post});
 	})
 })
 
 
-app.post("/do-reply", function (req, res) {
+router.post("/do-reply", function (req, res) {
 	var reply_id = ObjectId();
 
 
@@ -189,7 +211,7 @@ app.post("/do-reply", function (req, res) {
 })
 
 
-app.post("/do-comment", function (req, res) {
+router.post("/do-comment", function (req, res) {
 	var comment_id = ObjectId();
 
 	blog.collection("posts").updateOne({"_id":ObjectId(req.body.post_id)}, {
@@ -207,8 +229,7 @@ app.post("/do-comment", function (req, res) {
 
 
 
-
-app.post("/do-upload-image", function (req, res) {
+router.post("/do-upload-image", function (req, res) {
 	var formData = new formidable.IncomingForm();
 	formData.parse(req, function (error, fields, files) {
 		var oldPath = files.file.path;
@@ -221,7 +242,7 @@ app.post("/do-upload-image", function (req, res) {
 	})
 }) 
 
-app.post("/do-update-image", function(req, res) {
+router.post("/do-update-image", function(req, res) {
 	var formData = new formidable.IncomingForm();
 	formData.parse(req, function (error, fields, files) {
 
@@ -256,6 +277,11 @@ io.on("connection", function (socket) {
 		socket.broadcast.emit("delete_post", replyId);
 	})
 })
+	
+	
+	module.exports = app;
+module.exports.handler = serverless(app);
+
 
 http.listen(5000)
 
