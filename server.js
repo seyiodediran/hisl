@@ -20,7 +20,9 @@ app.use(session({
 }))
 
 var MongoClient = require("mongodb").MongoClient;
-MongoClient.connect("mongodb://localhost:27017", {useNewUrlParser: true, useUnifiedTopology: true}, function (error,client){
+MongoClient.connect("mongodb://heroku_r5v60772:hpepohkt0b8a86co9sampanccm@ds143156.mlab.com:43156/her
+oku_r5v60772
+", {useNewUrlParser: true, useUnifiedTopology: true}, function (error,client){
 	var blog = client.db("blog");
 	console.log("DB connected");
 
