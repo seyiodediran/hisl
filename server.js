@@ -264,17 +264,12 @@ io.on("connection", function (socket) {
 	})
 })
 
-<<<<<<< HEAD
+
 
 const port = process.env.PORT || 3000;
 
-=======
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8000;
-}
->>>>>>> d2b81a4d19a679c828cace12c5d00be0ba540754
+
 app.listen(port);
 
 
