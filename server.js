@@ -23,7 +23,11 @@ app.use(session({
 }))
 
 
+
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/hephzibah', {useNewUrlParser: true, useUnifiedTopology: true})
+
+
+
 	var blog = client.db("blog");
 	console.log("DB connected");
 
@@ -260,9 +264,17 @@ io.on("connection", function (socket) {
 	})
 })
 
+<<<<<<< HEAD
 
 const port = process.env.PORT || 3000;
 
+=======
+
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+>>>>>>> d2b81a4d19a679c828cace12c5d00be0ba540754
 app.listen(port);
 
 
