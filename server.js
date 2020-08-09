@@ -1,5 +1,8 @@
+require('dotenv').config();
+
+
 const express = require('express')
-const mongoose = require('mongoose')
+var mongoose = require('mongoose')
 // const Article = require('./models/article')
 // const articleRouter = require('./routes/articles')
 // const methodOverride = require('method-override')
@@ -19,8 +22,8 @@ app.use(session({
 	secret: "any random string"
 }))
 
-var MongoClient = require("mongodb").MongoClient;
-MongoClient.connect("mongodb://heroku_r5v60772:hpepohkt0b8a86co9sampanccm@ds143156.mlab.com:43156/heroku_r5v60772", {useNewUrlParser: true, useUnifiedTopology: true}, function (error,client){
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/hephzibah', {useNewUrlParser: true, useUnifiedTopology: true})
 	var blog = client.db("blog");
 	console.log("DB connected");
 
@@ -258,14 +261,11 @@ io.on("connection", function (socket) {
 })
 
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8000;
-}
+const port = process.env.PORT || 3000;
+
 app.listen(port);
 
 
 
 
 
-})
